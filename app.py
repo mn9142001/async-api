@@ -38,9 +38,4 @@ class App:
         await Response(message, request=self.request, status=status).send_body()
 
 
-wsgi_app = App()
-
-
-def app(*args, **kwargs):
-    return wsgi_app(*args, **kwargs)
-
+app = App()
