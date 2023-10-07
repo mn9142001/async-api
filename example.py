@@ -25,7 +25,6 @@ async def index_page(request : Request):
 
 @router.register('/test', methods=["GET", "POST"])
 async def index_page(request : Request):
-    print(await request.body)
     if request.method == 'GET':
         return "This is a get request"
     return {"message" : "Hello from post test page!"}

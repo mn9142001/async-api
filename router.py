@@ -4,6 +4,9 @@ from response import Response
 from exception import Http404
 from reg import compile_path
 
+ALL_METHODS = '__all__'
+
+
 class Path:
     
     kwargs = {}
@@ -15,7 +18,7 @@ class Path:
         self.path_regex = compile_path(path)
         
     async def match_method(self, method) -> bool:
-        return method in self.methods
+        return (self.methods == ALL_METHODS) or (method in self.methods)
         
     async def match(self, url : str) -> bool:
         match = self.path_regex.match(url)
@@ -75,6 +78,10 @@ class Router:
             
     def register(self, route, methods):
         return self.route(route, methods)
+    
+    def register_view(self, route, view):
+        path = Path(route, ALL_METHODS, view)
+        self.include_path(path)
             
     def include_urls(self, urls : list[Path]):
         self.routes += urls

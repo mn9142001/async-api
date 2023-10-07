@@ -2,13 +2,14 @@ from exception import ApiException
 from typing import Any
 from request import Request
 from router import Router
-from views import router
+from example import router
 from middleware import BaseMiddleWare
 from response import Response
+from cbv import cbv_router
 
 urls = [
     
-] + router.routes
+] + router.routes + cbv_router.routes
 
 class App:
 
