@@ -12,10 +12,10 @@ class Path:
     kwargs = {}
     
     def __init__(self, path : str, methods : str, callable) -> None:
-        self.path : str = path
+        self.path : str = f"/{path}"
         self.view = callable
         self.methods = methods
-        self.path_regex = compile_path(path)
+        self.path_regex = compile_path(self.path)
         
     async def match_method(self, method) -> bool:
         return (self.methods == ALL_METHODS) or (method in self.methods)

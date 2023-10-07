@@ -5,15 +5,15 @@ from cbv import View
 
 router = Router()
 
-@router.get('/admin/{x}/{y}/')
+@router.get('admin/{x}/{y}/')
 async def admin_page(request : Request):
     return {"message" : "Hello from admin page!"}
 
-@router.get('/')
+@router.get('')
 async def index_page(request : Request):    
     return "Hello world!"
 
-@router.post('/')
+@router.post('')
 async def index_page(request : Request):
     """You can either return a full response object or the data directly"""
     
@@ -24,7 +24,7 @@ async def index_page(request : Request):
     )
     return response
 
-@router.register('/test', methods=["GET", "POST"])
+@router.register('test', methods=["GET", "POST"])
 async def index_page(request : Request):
     if request.method == 'GET':
         return "This is a get request"
@@ -37,4 +37,4 @@ class HomeView(View):
         return "hello from cbv"    
 
 
-router.register_as_view('/cbv', HomeView.as_view())
+router.register_as_view('cbv', HomeView.as_view())

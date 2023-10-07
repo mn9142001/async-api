@@ -6,14 +6,17 @@ class View:
     
     request : Request
     
+    def __init__(self, request : Request) -> None:
+        self.request = request
+    
     @classmethod
     def as_view(cls):
-        _cls = cls()
-        return _cls.dispatch
+        return cls.dispatch
     
-    async def dispatch(self, request : Request):
-        self.request = request
-        return await self.call_method()
+    @classmethod
+    async def dispatch(cls, request : Request):
+        view = cls(request)
+        return await view.call_method()
     
     async def call_method(self):
         method_name = self.request.method.lower()
