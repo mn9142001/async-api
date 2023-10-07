@@ -1,3 +1,4 @@
+from response import Response
 from router import Router
 from request import Request
 
@@ -13,7 +14,11 @@ async def index_page(request : Request):
 
 @router.post('/')
 async def index_page(request : Request):
-    return {"message" : "Hello from post index page!", "query" : request.params.query, "body" : await request.body}
+    data = {"message" : "Hello from post index page!", "query" : request.params.query, "body" : await request.body}
+    response = Response(
+        data,
+    )
+    return response
 
 @router.get('/favicon.ico')
 async def index_page(request : Request):

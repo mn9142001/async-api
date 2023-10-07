@@ -2,14 +2,14 @@ from functools import cached_property
 import json
 from exception import Http400
 from structs import QueryParameter
-
+from mixins import SendResponseMixin
 
 class Headers:
     def __init__(self, headers={}) -> None:
         [setattr(self, key.decode(), value.decode()) for key, value in headers]
         
 
-class Request:        
+class Request(SendResponseMixin):
     def __init__(self, scope : dict, send = None, rec = None) -> None:
         self.scope = scope
         self.set_scope()

@@ -1,5 +1,5 @@
 from request import Request
-from typing import Any
+from typing import Any, Optional
 from response import Response
 from exception import Http404
 
@@ -20,8 +20,11 @@ class Path:
         return await self._match(url)
     
     async def __call__(self, request : Request) -> Any:
-        response = await self.view(request)
-        response = Response(response, request=request)
+        response : Optional[dict | Response] = await self.view(request)
+        if not isinstance(response, Response):                
+            response = Response(response, request=request)
+        else:
+            response.request = request
         return await response.response
 
     def __str__(self) -> str:
