@@ -51,15 +51,15 @@ class Router:
         return response
     
     def route(self, route, methods):
-            def decorator(func):
-                def wrapper(request):
-                    return func(request)
-                
-                path = Path(route, methods, wrapper)
-                self.include_path(path)
-                return wrapper
+        def decorator(func):
+            def wrapper(request):
+                return func(request)
+            
+            path = Path(route, methods, wrapper)
+            self.include_path(path)
+            return wrapper
 
-            return decorator
+        return decorator
 
     def get(self, route):
         return self.route(route, ["GET"])
