@@ -37,4 +37,4 @@ class HomeView(View):
         return "hello from cbv"    
 
 
-router.register_view('/cbv', HomeView.as_view())
+router.register_as_view('/cbv', HomeView.as_view())

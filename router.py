@@ -79,7 +79,7 @@ class Router:
     def register(self, route, methods):
         return self.route(route, methods)
     
-    def register_view(self, route, view):
+    def register_as_view(self, route, view):
         path = Path(route, ALL_METHODS, view)
         self.include_path(path)
             
