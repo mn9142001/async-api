@@ -23,7 +23,7 @@ class Path:
         response : Optional[dict | Response] = await self.view(request)
         if not isinstance(response, Response):                
             response = Response(response, request=request)
-        return await response.response
+        await response.send_response()
 
     def __str__(self) -> str:
         return f"{self.path} - {self.view}"

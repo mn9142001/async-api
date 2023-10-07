@@ -25,10 +25,7 @@ class Response(SendResponseMixin):
             self.status = data[1]
             data = data[0]
         return data
-    
-    async def __call__(self, *args: Any, **kwds: Any) -> list[bytes]:
-        await self.send_body()
-        
+            
     async def send_body(self):
         await self.send({
             'type': 'http.response.body',
@@ -47,7 +44,6 @@ class Response(SendResponseMixin):
         )
         return headers
     
-    @property
-    async def response(self):
-        return await self()
+    async def send_response(self):
+        await self.send_body()
     
