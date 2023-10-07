@@ -10,7 +10,10 @@ class Headers:
         
 
 class Request(SendResponseMixin):
+    kwargs : dict
+    
     def __init__(self, scope : dict, send = None, rec = None) -> None:
+        self.kwargs = {}
         self.scope = scope
         self.set_scope()
         self.headers = Headers(headers=scope.get('headers', []))

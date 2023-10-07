@@ -2,22 +2,32 @@ from request import Request
 from typing import Any, Optional
 from response import Response
 from exception import Http404
-
+from reg import compile_path
 
 class Path:
+    
+    kwargs = {}
+    
     def __init__(self, path : str, method : str, callable) -> None:
         self.path : str = path
         self.view = callable
         self.method : str = method
+        self.path_regex = compile_path(path)
         
-    async def match_method(self, method):
+    async def match_method(self, method) -> bool:
         return self.method == method
         
     async def _match(self, url):
+        
         return str(self.path) == str(url)
     
-    async def match(self, url : str):
-        return await self._match(url)
+    async def match(self, url : str) -> bool:
+        match = self.path_regex.match(url)
+        if not match: return False
+
+        self.kwargs = match.groupdict()
+        return True
+
     
     async def __call__(self, request : Request) -> Any:
         response : Optional[dict | Response] = await self.view(request)
@@ -37,6 +47,7 @@ class Router:
     async def __call__(self, request : Request =None) -> Any:
         self.request = request
         view = await self.match(request.dest)
+        self.request.kwargs = view.kwargs
         response = await view(self.request)
         return response
     

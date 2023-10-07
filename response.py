@@ -8,24 +8,17 @@ from mixins import SendResponseMixin
 tracemalloc.start()
 
 class Response(SendResponseMixin):
-    _content_type = None
     
     def __init__(self, data : dict, request: Request, status = HTTP_200_OK, content_type = "application/json") -> None:
         self.request = request
         self.status = status
         self.content_type = content_type
-        self.data = self.parse_data(data)
+        self.data = data
         self.headers = []
         
     async def set_header(self, name:str, value:str):
         self.headers.append((name.encode(), value.encode))
-    
-    def parse_data(self, data):
-        if type(data) == tuple:
-            self.status = data[1]
-            data = data[0]
-        return data
-            
+
     async def send_body(self):
         await self.send({
             'type': 'http.response.body',
