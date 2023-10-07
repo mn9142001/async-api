@@ -94,5 +94,5 @@ class Router:
         self.routes.append(path)
     
     def include_path(self, route : str, method : Optional[str | list[Path]], view : Any):
-        path = Path(route, ALL_METHODS, view)
+        path = Path(route, method, view)
         self._include_path(path)
