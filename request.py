@@ -11,6 +11,7 @@ class Headers:
 
 class Request(SendResponseMixin):
     kwargs : dict
+    method : str
     
     def __init__(self, scope : dict, send = None, rec = None) -> None:
         self.kwargs = {}

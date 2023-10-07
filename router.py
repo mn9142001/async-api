@@ -8,19 +8,15 @@ class Path:
     
     kwargs = {}
     
-    def __init__(self, path : str, method : str, callable) -> None:
+    def __init__(self, path : str, methods : str, callable) -> None:
         self.path : str = path
         self.view = callable
-        self.method : str = method
+        self.methods = methods
         self.path_regex = compile_path(path)
         
     async def match_method(self, method) -> bool:
-        return self.method == method
+        return method in self.methods
         
-    async def _match(self, url):
-        
-        return str(self.path) == str(url)
-    
     async def match(self, url : str) -> bool:
         match = self.path_regex.match(url)
         if not match: return False
@@ -51,47 +47,35 @@ class Router:
         response = await view(self.request)
         return response
     
-    def post(self, route):
-        def decorator(func):
-            def wrapper(request):
-                return func(request)
-            self.include_path(Path(route, "POST", wrapper))
-            return wrapper
-        return decorator
+    def route(self, route, methods):
+            def decorator(func):
+                def wrapper(request):
+                    return func(request)
+                
+                path = Path(route, methods, wrapper)
+                self.include_path(path)
+                return wrapper
+
+            return decorator
 
     def get(self, route):
-        def decorator(func):
-            def wrapper(request):
-                return func(request)
-            self.include_path(Path(route, "GET", wrapper))
-            return wrapper
-        return decorator
-    
+        return self.route(route, ["GET"])
+
     def put(self, route):
-        def decorator(func):
-            def wrapper(request):
-                return func(request)
-            self.include_path(Path(route, "PUT", wrapper))
-            return wrapper
-        return decorator
-    
+        return self.route(route, ["PUT"])
+
     def patch(self, route):
-        def decorator(func):
-            def wrapper(request):
-                return func(request)
-            self.include_path(Path(route, "PATCH", wrapper))
-            return wrapper
-        return decorator
-    
+        return self.route(route, ["PATCH"])
+
     def delete(self, route):
-        def decorator(func):
-            def wrapper(request):
-                return func(request)
-            self.include_path(Path(route, "DELETE", wrapper))
-            return wrapper
-        return decorator
-    
-        
+        return self.route(route, ["DELETE"])
+
+    def post(self, route):
+        return self.route(route, ["POST"])
+            
+    def register(self, route, methods):
+        return self.route(route, methods)
+            
     def include_urls(self, urls : list[Path]):
         self.routes += urls
     

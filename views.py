@@ -23,6 +23,10 @@ async def index_page(request : Request):
     )
     return response
 
-@router.get('/favicon.ico')
+@router.register('/test', methods=["GET", "POST"])
 async def index_page(request : Request):
-    return {"message" : "Hello from index page!"}
+    if request.method == 'GET':
+        return "This is a get request"
+    return {"message" : "Hello from post test page!"}
+
+
