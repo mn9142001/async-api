@@ -5,11 +5,10 @@ from router import Router
 from example import router
 from middleware import BaseMiddleWare
 from response import Response
-from cbv import cbv_router
 
 urls = [
     
-] + router.routes + cbv_router.routes
+] + router.routes 
 
 class App:
 

@@ -1,9 +1,8 @@
-from router import Router
 from request import Request
 from exception import Http405
 
 
-class BaseView:
+class View:
     
     request : Request
     
@@ -27,12 +26,3 @@ class BaseView:
         return response
 
 
-class HomeView(BaseView):
-    
-    async def get(self):        
-        return "hello from cbv"
-    
-    
-cbv_router = Router()
-
-cbv_router.register_view('/cbv', HomeView.as_view())

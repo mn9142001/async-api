@@ -1,6 +1,7 @@
 from response import Response
 from router import Router
 from request import Request
+from cbv import View
 
 router = Router()
 
@@ -30,3 +31,10 @@ async def index_page(request : Request):
     return {"message" : "Hello from post test page!"}
 
 
+class HomeView(View):
+    
+    async def get(self):        
+        return "hello from cbv"    
+
+
+router.register_view('/cbv', HomeView.as_view())
