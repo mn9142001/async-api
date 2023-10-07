@@ -66,6 +66,31 @@ class Router:
             self.include_path(Path(route, "GET", wrapper))
             return wrapper
         return decorator
+    
+    def put(self, route):
+        def decorator(func):
+            def wrapper(request):
+                return func(request)
+            self.include_path(Path(route, "PUT", wrapper))
+            return wrapper
+        return decorator
+    
+    def patch(self, route):
+        def decorator(func):
+            def wrapper(request):
+                return func(request)
+            self.include_path(Path(route, "PATCH", wrapper))
+            return wrapper
+        return decorator
+    
+    def delete(self, route):
+        def decorator(func):
+            def wrapper(request):
+                return func(request)
+            self.include_path(Path(route, "DELETE", wrapper))
+            return wrapper
+        return decorator
+    
         
     def include_urls(self, urls : list[Path]):
         self.routes += urls
