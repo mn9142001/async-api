@@ -10,7 +10,7 @@ tracemalloc.start()
 class Response(SendResponseMixin):
     _content_type = None
     
-    def __init__(self, data : dict, request: Request = None, status = HTTP_200_OK, content_type = "application/json") -> None:
+    def __init__(self, data : dict, request: Request, status = HTTP_200_OK, content_type = "application/json") -> None:
         self.request = request
         self.status = status
         self.content_type = content_type

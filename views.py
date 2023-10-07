@@ -17,6 +17,7 @@ async def index_page(request : Request):
     data = {"message" : "Hello from post index page!", "query" : request.params.query, "body" : await request.body}
     response = Response(
         data,
+        request
     )
     return response
 
