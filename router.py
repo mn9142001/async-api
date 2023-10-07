@@ -55,8 +55,7 @@ class Router:
             def wrapper(request):
                 return func(request)
             
-            path = Path(route, methods, wrapper)
-            self.include_path(path)
+            self.include_path(route, methods, wrapper)
             return wrapper
 
         return decorator
@@ -80,8 +79,7 @@ class Router:
         return self.route(route, methods)
     
     def register_as_view(self, route, view):
-        path = Path(route, ALL_METHODS, view)
-        self.include_path(path)
+        self.include_path(route, ALL_METHODS, view)
             
     def include_urls(self, urls : list[Path]):
         self.routes += urls
@@ -91,8 +89,10 @@ class Router:
             if await path.match(dest) and await path.match_method(self.request.method):
                 return path
         raise Http404
-        
 
-    
-    def include_path(self, path : Path):
+    def _include_path(self, path : Path):
         self.routes.append(path)
+    
+    def include_path(self, route : str, method : Optional[str | list[Path]], view : Any):
+        path = Path(route, ALL_METHODS, view)
+        self._include_path(path)
