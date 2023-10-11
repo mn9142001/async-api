@@ -1,7 +1,7 @@
 from .path import Path, ALL_METHODS
-from request import Request
+from wsgi.request import Request
 from typing import Any, Optional
-from exception import Http404
+from wsgi.exception import Http404
 
 
 class Router:

@@ -1,9 +1,9 @@
-from request import Request
+from wsgi.request import Request
 from typing import Any, Optional
-from response import Response
+from wsgi.response import Response
 from .reg import compile_path
 from pydantic import BaseModel, ValidationError
-import exception
+from wsgi import exception
 
 ALL_METHODS = '__all__'
 

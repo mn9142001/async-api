@@ -1,4 +1,4 @@
-import status
+from wsgi import status
 
 class ApiException(Exception):
     message : str

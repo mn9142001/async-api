@@ -1,8 +1,8 @@
-from request import Request
-from status import HTTP_200_OK
+from .request import Request
+from .status import HTTP_200_OK
 import json
 import tracemalloc
-from mixins import SendResponseMixin
+from .mixins import SendResponseMixin
  
 tracemalloc.start()
 

@@ -1,5 +1,5 @@
-from request import Request
-from exception import Http405
+from wsgi.request import Request
+from wsgi.exception import Http405
 
 
 class View:

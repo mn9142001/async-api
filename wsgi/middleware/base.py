@@ -1,5 +1,5 @@
-from request import Request
-from response import Response
+from wsgi.request import Request
+from wsgi.response import Response
 
 class BaseMiddleWare:
     

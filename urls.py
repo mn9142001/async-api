@@ -1,5 +1,5 @@
 from views import example_router
 
-router = [
+urls = [
     
 ] + example_router.routes 

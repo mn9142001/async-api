@@ -1,7 +1,6 @@
 from functools import cached_property
-from structs import QueryParameter
-from mixins import SendResponseMixin, RequestBodyDecoder
-from structs import Headers
+from wsgi.structs import QueryParameter, Headers
+from wsgi.mixins import SendResponseMixin, RequestBodyDecoder
 
 
 class Request(RequestBodyDecoder, SendResponseMixin):

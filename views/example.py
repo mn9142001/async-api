@@ -1,8 +1,8 @@
-from response import Response
-from router import Router
-from request import Request
+from wsgi.response import Response
+from wsgi.router import Router
+from wsgi.request import Request
 from .cbv import View
-from schema import UserSchema
+from wsgi.schema import UserSchema
 
 router = Router()
 

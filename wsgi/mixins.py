@@ -1,5 +1,5 @@
 import json
-from exception import ValidationError
+from wsgi.exception import ValidationError
 
 class SendResponseMixin:
     async def get_scope(self):
