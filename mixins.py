@@ -1,5 +1,5 @@
 import json
-from exception import Http400
+from exception import ValidationError
 
 class SendResponseMixin:
     async def get_scope(self):
@@ -27,7 +27,7 @@ class RequestBodyDecoder:
             self._body = json.loads(data)
         except (json.JSONDecodeError, UnicodeDecodeError) as e:
             error = f"Error parsing JSON: {str(e)}"
-            raise Http400(error)
+            raise ValidationError(error)
     
     async def get_raw_body(self):
         request_body = await self.rec()
@@ -40,7 +40,7 @@ class RequestBodyDecoder:
         if self.headers.is_json:
             return await self.json_decoder(data)
         
-        raise Http400("API accepts only json")
+        raise ValidationError("API accepts only json")
             
     @property
     async def body(self):

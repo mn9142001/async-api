@@ -20,7 +20,7 @@ class Http405(ApiException):
     status_code = status.HTTP_405_METHOD_NOT_ALLOWED
     
     
-class Http400(ApiException):
+class ValidationError(ApiException):
     message = "bad request"
     status_code = status.HTTP_400_BAD_REQUEST
     

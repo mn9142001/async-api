@@ -1,7 +1,8 @@
 from response import Response
 from router import Router
 from request import Request
-from cbv import View
+from .cbv import View
+from schema import UserSchema
 
 router = Router()
 
@@ -13,7 +14,7 @@ async def admin_page(request : Request):
 async def index_page(request : Request):    
     return "Hello world!"
 
-@router.post('')
+@router.post('', validator = UserSchema)
 async def index_page(request : Request):
     """You can either return a full response object or the data directly"""
     

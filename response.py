@@ -1,5 +1,4 @@
 from request import Request
-from typing import Any
 from status import HTTP_200_OK
 import json
 import tracemalloc

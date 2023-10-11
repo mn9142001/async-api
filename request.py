@@ -1,22 +1,7 @@
 from functools import cached_property
 from structs import QueryParameter
 from mixins import SendResponseMixin, RequestBodyDecoder
-
-class Headers:
-    def __init__(self, headers={}) -> None:
-        [setattr(self, key.decode(), value.decode()) for key, value in headers]
-
-    @property
-    def content_type(self):
-        return getattr(self, 'content-type', "")
-
-    @property
-    def is_json(self):
-        return self.content_type.startswith("application/json")
-    
-    @property
-    def is_multipart(self):
-        return self.content_type.startswith('multipart/form-data')
+from structs import Headers
 
 
 class Request(RequestBodyDecoder, SendResponseMixin):
