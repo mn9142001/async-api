@@ -1,7 +1,7 @@
 from wsgi.exception import ApiException
 from typing import Any, Optional
 from wsgi.request import Request
-from wsgi.router import Router
+from wsgi.router import Router, Path
 from wsgi.middleware import BaseMiddleWare
 from wsgi.response import Response
 
@@ -13,7 +13,7 @@ class App:
         self.middlewares = middlewares
         self.include_urls(urls)
     
-    def include_urls(self, urls):
+    def include_urls(self, urls : list[Path]):
         self.router.include_urls(urls)
         
     def include_router(self, router : Router):

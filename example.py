@@ -1,14 +1,14 @@
 from wsgi.response import Response
 from wsgi.router import Router
 from wsgi.request import Request
-from .cbv import View
 from wsgi.schema import UserSchema
+from wsgi.views import View
 
 router = Router()
 
 @router.get('admin/{x}/{y}/')
 async def admin_page(request : Request):
-    return {"message" : "Hello from admin page!"}
+    return {"message" : "Hello from admin page!", "kwarg_x" : request.kwargs['x'], "kwarg_y" : request.kwargs['y']}
 
 @router.get('')
 async def index_page(request : Request):    

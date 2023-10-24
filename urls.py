@@ -1,4 +1,4 @@
-from views.example import router as example_router
+from example import router as example_router
 
 urls = [
     
