@@ -10,7 +10,6 @@ router = Router()
 async def admin_page(request : Request):
     
     return {"message" : "Hello from admin page!", "kwarg_x" : request.kwargs['x'], "kwarg_y" : request.kwargs['y']}
-
 ```
 
 ### that was a basic get view example
@@ -20,8 +19,14 @@ async def admin_page(request : Request):
 @router.post('', validator = UserSchema)
 async def index_page(request : Request):
     """You can either return a full response object or the data directly"""
-    
     return {"message" : "Hello from post index page!", "query" : request.params.query, "body" : await request.body}
+```
+
+You can also access files like that
+
+```
+files = await request.files
+print(files)
 ```
 
 ##### Data can be validated automatically by setting the validator in the post kwargs
@@ -35,7 +40,6 @@ return Response(
     data,
     request
 )
-    
 ```
 
 ## Class Based Views can also be used
@@ -48,7 +52,6 @@ class HomeView(View):
         return "hello from cbv"    
 
 router.register_as_view('cbv', HomeView.as_view())
-
 ```
 
 

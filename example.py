@@ -16,8 +16,10 @@ async def index_page(request : Request):
 
 @router.post('', validator = UserSchema)
 async def index_page(request : Request):
+    files = await request.files
+
     """You can either return a full response object or the data directly"""
-    
+
     data = {"message" : "Hello from post index page!", "query" : request.params.query, "body" : await request.body}
     response = Response(
         data,

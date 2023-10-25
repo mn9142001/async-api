@@ -1,9 +1,10 @@
 from wsgi.request import Request
-from typing import Any, Optional
+from typing import Any, Union
 from wsgi.response import Response
-from .reg import compile_path
+from wsgi.router.reg import compile_path
 from pydantic import BaseModel, ValidationError
 from wsgi import exception
+from wsgi.structs import MultiValueDict
 
 ALL_METHODS = '__all__'
 
@@ -32,7 +33,7 @@ class Path:
 
     @staticmethod
     async def is_mapping(obj):
-        if type(obj) == dict:
+        if issubclass(obj.__class__, dict):
             return True
         raise exception.ValidationError("Object is not a valid mapping")
 
@@ -45,11 +46,11 @@ class Path:
         return self.validate_many
 
     @staticmethod
-    async def _validate(validator : BaseModel, obj : dict):
+    async def _validate(validator : BaseModel, obj : Union[dict, MultiValueDict]):
         try:
-            print(obj)
-            validator(**obj)
-        except ValidationError as e:
+            to_validate = obj if type(obj) is dict else obj.dict()
+            validator.model_validate(to_validate)
+        except (ValidationError, exception.ValidationError) as e:
             raise exception.ValidationError(e.errors())
         
     @staticmethod
@@ -69,7 +70,7 @@ class Path:
                 await self._validate(self.validator, obj)
                 
         else:
-            self.is_mapping(await self.request.body)
+            await self.is_mapping(await self.request.body)
             await self._validate(self.validator, await self.request.body)
     
     
@@ -79,7 +80,7 @@ class Path:
         if self.is_validate:
             await self.validate()
             
-        response : Optional[dict | Response] = await self.view(request)
+        response : Union[dict, Response] = await self.view(request)
         
         if not isinstance(response, Response):                
             response = Response(response, request=request)

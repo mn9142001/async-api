@@ -3,6 +3,9 @@ from wsgi import status
 class ApiException(Exception):
     message : str
     status_code : int
+
+    def errors(self):
+        return self.message
     
     def __init__(self, message=None, *args) -> None:
         if message:
@@ -23,5 +26,4 @@ class Http405(ApiException):
 class ValidationError(ApiException):
     message = "bad request"
     status_code = status.HTTP_400_BAD_REQUEST
-    
     

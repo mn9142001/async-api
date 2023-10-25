@@ -1,6 +1,6 @@
 from .path import Path, ALL_METHODS
 from wsgi.request import Request
-from typing import Any, Optional
+from typing import Any, Union
 from wsgi.exception import Http404
 
 
@@ -59,6 +59,6 @@ class Router:
     def _include_path(self, path : Path):
         self.routes.append(path)
     
-    def include_path(self, route : str, method : Optional[str | list[Path]], view : Any, *args, **kwargs):
+    def include_path(self, route : str, method : Union[str, list[Path]], view : Any, *args, **kwargs):
         path = Path(route, method, view, *args, **kwargs)
         self._include_path(path)

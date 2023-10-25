@@ -1,5 +1,5 @@
 from wsgi.exception import ApiException
-from typing import Any, Optional
+from typing import Any, Union
 from wsgi.request import Request
 from wsgi.router import Router, Path
 from wsgi.middleware import BaseMiddleWare
@@ -33,7 +33,7 @@ class App:
         status = exception.status_code
         await Response(message, request=self.request, status=status).send_body()
 
-    async def get_exception_message(self, message : Optional[str | dict]):
+    async def get_exception_message(self, message : Union[str, dict]):
         if type(message) == dict:
             return dict
         return {"detail" : message}
