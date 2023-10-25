@@ -178,7 +178,6 @@ class MultiValueDict(dict):
         return {key: self[key] for key in self}
 
 
-
 class QueryParameter:
     
     def __init__(self, query : str) -> None:

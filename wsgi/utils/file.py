@@ -17,8 +17,11 @@ class File:
     
     @property
     async def media_folder_path(self):
-        return os.path.join(BASE_DIR, 'media')
-    
+        path = os.path.join(BASE_DIR, 'media')
+        if not os.path.exists(path):
+            os.makedirs(path)
+        return path
+            
     @property
     async def path(self):
         if hasattr(self, '_path'):
