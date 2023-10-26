@@ -19,10 +19,10 @@ class App:
     def include_router(self, router : Router):
         self.router.include_urls(router.routes)
     
-    async def __call__(self, scope: dict, rec, send, **kwargs: Any) -> Any:
+    async def __call__(self, scope: dict, receive, send) -> Any:
         scope['app'] = self
         try:                
-            self.request = Request(scope, send=send, rec=rec)
+            self.request = Request(scope, send=send, rec=receive)
             response = self.router(self.request)
             await response
         except ApiException as e:
