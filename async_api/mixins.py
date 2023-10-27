@@ -1,8 +1,8 @@
 import json
-from wsgi.exception import ValidationError
+from async_api.exception import ValidationError
 from requests_toolbelt.multipart import decoder
-from wsgi.utils.file import File
-from wsgi.structs import MultiValueDict
+from async_api.utils.file import File
+from async_api.structs import MultiValueDict
 from typing import Union
 
 

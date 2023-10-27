@@ -1,4 +1,4 @@
-from wsgi import status
+from async_api import status
 
 class ApiException(Exception):
     message : str

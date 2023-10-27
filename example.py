@@ -1,8 +1,8 @@
-from wsgi.response import Response
-from wsgi.router import Router
-from wsgi.request import Request
-from wsgi.schema import UserSchema
-from wsgi.views import View
+from async_api.response import Response
+from async_api.router import Router
+from async_api.request import Request
+from async_api.schema import UserSchema
+from async_api.views import View
 
 router = Router()
 

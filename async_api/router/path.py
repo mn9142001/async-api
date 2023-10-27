@@ -1,10 +1,10 @@
-from wsgi.request import Request
+from async_api.request import Request
 from typing import Any, Union
-from wsgi.response import Response
-from wsgi.router.reg import compile_path
+from async_api.response import Response
+from async_api.router.reg import compile_path
 from pydantic import BaseModel, ValidationError
-from wsgi import exception
-from wsgi.structs import MultiValueDict
+from async_api import exception
+from async_api.structs import MultiValueDict
 
 ALL_METHODS = '__all__'
 

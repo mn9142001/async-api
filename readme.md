@@ -3,7 +3,7 @@
 ### How to use
 
 ```
-from wsgi.router import Router
+from async_api.router import Router
 router = Router()
 
 @router.get('admin/{x}/{y}/')
@@ -34,7 +34,7 @@ print(files)
 ###### You can also return the full response yourself
 
 ```
-from wsgi.response import Response
+from async_api.response import Response
 
 return Response(
     data,
@@ -44,7 +44,7 @@ return Response(
 
 ## Class Based Views can also be used
 ```
-from wsgi.views import View
+from async_api.views import View
 
 class HomeView(View):
     

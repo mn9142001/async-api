@@ -1,5 +1,5 @@
 from pydantic import BaseModel, validator
-from wsgi import exception
+from async_api import exception
 
 
 class PasswordMixin:

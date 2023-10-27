@@ -1,7 +1,7 @@
 from .path import Path, ALL_METHODS
-from wsgi.request import Request
+from async_api.request import Request
 from typing import Any, Union
-from wsgi.exception import Http404
+from async_api.exception import Http404
 
 
 class Router:

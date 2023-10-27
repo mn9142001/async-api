@@ -1,6 +1,6 @@
 from functools import cached_property
-from wsgi.structs import QueryParameter, Headers
-from wsgi.mixins import SendResponseMixin, RequestBodyDecoder
+from async_api.structs import QueryParameter, Headers
+from async_api.mixins import SendResponseMixin, RequestBodyDecoder
 
 
 class Request(RequestBodyDecoder, SendResponseMixin):

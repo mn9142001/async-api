@@ -1,5 +1,5 @@
-from wsgi.request import Request
-from wsgi.response import Response
+from async_api.request import Request
+from async_api.response import Response
 
 class BaseMiddleWare:
     
