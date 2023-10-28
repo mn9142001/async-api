@@ -1,8 +1,12 @@
 from .path import Path, ALL_METHODS
 from async_api.request import Request
 from typing import Any, Union
-from async_api.exception import Http404
+from async_api.exception import Http404, Http405
 
+class PathMatchPattern:
+    NONE = 0
+    PARTIAL = 1
+    FULL = 2
 
 class Router:
     
@@ -51,9 +55,23 @@ class Router:
         self.routes += urls
     
     async def match(self, dest):
+        path : Path = None
+        match_pattern = PathMatchPattern.NONE
+
         for path in self.routes:
-            if await path.match(dest) and await path.match_method(self.request.method):
-                return path
+            if await path.match(dest):
+                match_pattern = PathMatchPattern.PARTIAL
+                if await path.match_method(self.request.method):
+                    match_pattern = PathMatchPattern.FULL
+                    path = path
+                    break
+
+        if match_pattern == PathMatchPattern.PARTIAL:
+          raise Http405
+
+        if match_pattern == PathMatchPattern.FULL:
+          return path
+
         raise Http404
 
     def _include_path(self, path : Path):
