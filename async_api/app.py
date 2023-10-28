@@ -8,23 +8,44 @@ from async_api.response import Response
 
 class App:
 
-    def __init__(self, middlewares : list[BaseMiddleWare]=[], urls = []) -> None:
+    def __init__(self, middlewares : list[BaseMiddleWare] = [], urls = []) -> None:
+        self.load_middlewares(middlewares)
+
         self.router = Router()
-        self.middlewares = middlewares
         self.include_urls(urls)
+        
+    def load_middlewares(self, middlewares):
+        self.middlewares : list[BaseMiddleWare] = [middleware() for middleware in middlewares]
     
     def include_urls(self, urls : list[Path]):
         self.router.include_urls(urls)
         
     def include_router(self, router : Router):
         self.router.include_urls(router.routes)
+
+    async def middleware_request_process(self, request : Request) -> Request:
+        for middleware in self.middlewares:
+            request = await middleware.process_request(request)
+        return request
     
+    async def middleware_response_process(self, response : Response) -> Response:
+        for middleware in reversed(self.middlewares):
+            response = await middleware.process_response(response)
+        return response
+
     async def __call__(self, scope: dict, receive, send) -> Any:
         scope['app'] = self
+
         try:                
-            self.request = Request(scope, send=send, rec=receive)
-            response = self.router(self.request)
-            await response
+            self.request = await self.middleware_request_process(
+                Request(scope, send=send, rec=receive)
+            )
+            
+            response = await self.middleware_response_process(
+                await self.router(self.request)
+            )
+            await response.send_response()
+
         except ApiException as e:
             await self.handle_Exception(e)
             

@@ -87,8 +87,8 @@ class Path:
         
         if not isinstance(response, Response):                
             response = Response(response, request=request)
-            
-        await response.send_response()
+        
+        return response    
 
     def __str__(self) -> str:
         return f"{self.path} - {self.view}"
