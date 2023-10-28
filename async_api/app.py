@@ -7,6 +7,7 @@ from async_api.response import Response
 
 
 class App:
+    request_class = Request
 
     def __init__(self, middlewares : list[BaseMiddleWare] = [], urls = []) -> None:
         self.load_middlewares(middlewares)
@@ -38,7 +39,7 @@ class App:
 
         try:                
             self.request = await self.middleware_request_process(
-                Request(scope, send=send, rec=receive)
+                self.request_class(scope, send=send, rec=receive)
             )
             
             response = await self.middleware_response_process(
