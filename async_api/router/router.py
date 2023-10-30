@@ -55,22 +55,16 @@ class Router:
         self.routes += urls
     
     async def match(self, dest):
-        view = None
         match_pattern = PathMatchPattern.NONE
 
         for path in self.routes:
             if await path.match(dest):
                 match_pattern = PathMatchPattern.PARTIAL
                 if await path.match_method(self.request.method):
-                    match_pattern = PathMatchPattern.FULL
-                    view = path
-                    break
+                    return path
 
         if match_pattern == PathMatchPattern.PARTIAL:
           raise Http405
-
-        if match_pattern == PathMatchPattern.FULL:
-            return view
 
         raise Http404
 
