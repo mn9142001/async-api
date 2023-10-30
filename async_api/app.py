@@ -23,6 +23,9 @@ class App:
         
     def include_router(self, router : Router):
         self.router.include_urls(router.routes)
+        
+    def include_router_list(self, routers : list[Router]):
+        [self.router.include_urls(router.routes) for router in routers]
 
     async def middleware_request_process(self, request : Request) -> Request:
         for middleware in self.middlewares:
