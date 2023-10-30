@@ -3,13 +3,15 @@ from async_api.request import Request
 from typing import Any, Union
 from async_api.exception import Http404, Http405
 
+
 class PathMatchPattern:
     NONE = 0
     PARTIAL = 1
     FULL = 2
 
+
 class Router:
-    
+
     def __init__(self) -> None:
         self.routes : list[Path] = []
 
@@ -19,7 +21,7 @@ class Router:
         self.request.kwargs = view.kwargs
         response = await view(self.request)
         return response
-    
+
     def route(self, route, methods, *args, **kwargs):
         def decorator(func):
             def wrapper(request):
@@ -44,33 +46,27 @@ class Router:
 
     def post(self, route, *args, **kwargs):
         return self.route(route, ["POST"], *args, **kwargs)
-            
+
     def register(self, route, methods, *args, **kwargs):
         return self.route(route, methods, *args, **kwargs)
-    
+
     def register_as_view(self, route, view):
         self.include_path(route, ALL_METHODS, view)
-            
+
     def include_urls(self, urls : list[Path]):
         self.routes += urls
-    
+
     async def match(self, dest):
-        view = None
         match_pattern = PathMatchPattern.NONE
 
         for path in self.routes:
             if await path.match(dest):
                 match_pattern = PathMatchPattern.PARTIAL
                 if await path.match_method(self.request.method):
-                    match_pattern = PathMatchPattern.FULL
-                    view = path
-                    break
+                    return path       
 
         if match_pattern == PathMatchPattern.PARTIAL:
           raise Http405
-
-        if match_pattern == PathMatchPattern.FULL:
-            return view
 
         raise Http404
 
