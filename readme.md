@@ -58,9 +58,12 @@ router.register_as_view('cbv', HomeView.as_view())
 to get started just do the following
 
 ```
-python -m venv venv
-venv\scripts\activate
-pip install uvicorn pydantic
+
+pip install git+https://github.com/mn9142001/async-api.git
+
+#install you async interface for example let's use uvicorn
+pip install uvicorn
+
 uvicorn app:app 
 ```
 
