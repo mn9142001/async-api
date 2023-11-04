@@ -1,1 +1,0 @@
-from .cbv import View
