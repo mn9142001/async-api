@@ -1,6 +1,23 @@
 # A python based backend application that I wrote for fun
 
 ### How to use
+first thing you need it to initialize an app
+
+```
+from async_api.app import App
+
+app = App()
+```
+
+
+if the app is small and consist of small APIs, you can do as following
+```
+@app.get('')
+async def index_page(request):
+    return "Hello world"
+```
+
+you can also split the application by importing the app object or use your own router
 
 ```
 from async_api.router import Router
