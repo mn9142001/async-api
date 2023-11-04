@@ -1,8 +1,8 @@
-from .path import Path, ALL_METHODS
+from .path import Path
 from async_api.request import Request
 from typing import Any, Union
 from async_api.exception import Http404, Http405
-
+from async_api.router.mixins import ViewIncludeMixin
 
 class PathMatchPattern:
     NONE = 0
@@ -10,7 +10,7 @@ class PathMatchPattern:
     FULL = 2
 
 
-class Router:
+class Router(ViewIncludeMixin):
 
     def __init__(self) -> None:
         self.routes : list[Path] = []
@@ -21,37 +21,6 @@ class Router:
         self.request.kwargs = view.kwargs
         response = await view(self.request)
         return response
-
-    def route(self, route, methods, *args, **kwargs):
-        def decorator(func):
-            def wrapper(request):
-                return func(request)
-            
-            self.include_path(route, methods, wrapper, *args, **kwargs)
-            return wrapper
-
-        return decorator
-
-    def get(self, route, *args, **kwargs):
-        return self.route(route, ["GET"], *args, **kwargs)
-
-    def put(self, route, *args, **kwargs):
-        return self.route(route, ["PUT"], *args, **kwargs)
-
-    def patch(self, route, *args, **kwargs):
-        return self.route(route, ["PATCH"], *args, **kwargs)
-
-    def delete(self, route, *args, **kwargs):
-        return self.route(route, ["DELETE"], *args, **kwargs)
-
-    def post(self, route, *args, **kwargs):
-        return self.route(route, ["POST"], *args, **kwargs)
-
-    def register(self, route, methods, *args, **kwargs):
-        return self.route(route, methods, *args, **kwargs)
-
-    def register_as_view(self, route, view):
-        self.include_path(route, ALL_METHODS, view)
 
     def include_urls(self, urls : list[Path]):
         self.routes += urls
@@ -72,7 +41,7 @@ class Router:
 
     def _include_path(self, path : Path):
         self.routes.append(path)
-    
+
     def include_path(self, route : str, method : Union[str, list[Path]], view : Any, *args, **kwargs):
         path = Path(route, method, view, *args, **kwargs)
         self._include_path(path)

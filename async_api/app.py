@@ -2,11 +2,12 @@ from async_api.exception import ApiException
 from typing import Any, Union
 from async_api.request import Request
 from async_api.router import Router, Path
+from async_api.router.mixins import ViewIncludeMixin
 from async_api.middleware import BaseMiddleWare
 from async_api.response import Response
 
 
-class App:
+class App(ViewIncludeMixin):
     request_class = Request
 
     def __init__(self, middlewares : list[BaseMiddleWare] = [], urls = []) -> None:
@@ -26,6 +27,9 @@ class App:
         
     def include_router_list(self, routers : list[Router]):
         [self.router.include_urls(router.routes) for router in routers]
+
+    def include_path(self, *args, **kwargs):
+        return self.router.include_path(*args, **kwargs)
 
     async def middleware_request_process(self, request : Request) -> Request:
         for middleware in self.middlewares:
