@@ -41,12 +41,19 @@ class App(ViewIncludeMixin):
             response = await middleware.process_response(response)
         return response
 
+    async def construct_request(self, scope, send, receive) -> Request:
+            request = self.request_class(scope, send, receive)
+            await request.set_body()
+            return request
+    
     async def __call__(self, scope: dict, receive, send) -> Any:
+        self.send = send
+        self.receive = receive
         scope['app'] = self
 
         try:                
             self.request = await self.middleware_request_process(
-                self.request_class(scope, send=send, rec=receive)
+                await self.construct_request(scope, send=send, receive=receive)
             )
             
             response = await self.middleware_response_process(
@@ -58,11 +65,16 @@ class App(ViewIncludeMixin):
             await self.handle_Exception(e)
             
     async def handle_Exception(self, exception : ApiException):
-        message = await self.get_exception_message(exception.message)
-        status = exception.status_code
-        await Response(message, request=self.request, status=status).send_body()
+        message = await self.get_exception_message(exception)
+        status = getattr(exception, "status_code", 500)
+        await Response(message, status=status, send=self.send).send_body()
 
-    async def get_exception_message(self, message : Union[str, dict]):
+    async def get_exception_message(self, exception):
+        if hasattr(exception, "message"):
+            message = exception.message
+        else:
+            message = str(exception)
+        
         if type(message) == dict:
             return dict
         return {"detail" : message}

@@ -34,18 +34,18 @@ class RequestBodyDecoder:
     
     
     @property
-    async def files(self) -> Union[dict[str, File], MultiValueDict[str, File]]:
+    def files(self) -> Union[dict[str, File], MultiValueDict[str, File]]:
         assert self.headers.is_multipart, "request must be of mulitpart type"
         return self._files
 
-    async def make_file(self, headers, content):
+    def make_file(self, headers, content):
         file = File(headers, content)        
-        self._files[await file.name] = file
+        self._files[file.name] = file
     
-    async def formdata_dict_constructor(self, part : decoder.BodyPart):
+    def formdata_dict_constructor(self, part : decoder.BodyPart):
         headers = part.headers
         if b'Content-Type' in headers:
-            await self.make_file(headers, part.content)
+            self.make_file(headers, part.content)
             raise IsFileException
 
         content_disposition = headers.get(b'Content-Disposition', b'').decode('utf-8')
@@ -57,7 +57,7 @@ class RequestBodyDecoder:
             raise ValidationError(f"{name} is not a text")
         return name, content
 
-    async def formdata_decoder(self, data : bytes):
+    def formdata_decoder(self, data : bytes):
         try:                
             parser = decoder.MultipartDecoder(
                 data, self.headers.content_type
@@ -69,13 +69,13 @@ class RequestBodyDecoder:
 
         for part in parser.parts:
             try:                    
-                key, value = await self.formdata_dict_constructor(part)
+                key, value = self.formdata_dict_constructor(part)
             except IsFileException as e:
                 continue
             body[key] = value
         self._body = body
 
-    async def json_decoder(self, data):
+    def json_decoder(self, data):
         try:
             self._body = json.loads(data)
         except (json.JSONDecodeError, UnicodeDecodeError) as e:
@@ -91,19 +91,19 @@ class RequestBodyDecoder:
         data = await self.get_raw_body()
         
         if self.headers.is_json:
-            return await self.json_decoder(data)
+            return self.json_decoder(data)
 
         elif self.headers.is_multipart:
-            return await self.formdata_decoder(data)
+            return self.formdata_decoder(data)
         
         raise ValidationError("Unknown content-type")
 
     @property
-    async def body(self) -> Union[MultiValueDict, dict]:
+    def body(self) -> Union[MultiValueDict, dict]:
         if self.method in ['GET', 'DELETE', 'OPTIONS']:  return
-        
-        if not hasattr(self, '_body'):
-            await self.parse_body()
-        
         return self._body
     
+    async def set_body(self):
+        if not hasattr(self, '_body'):
+            await self.parse_body()
+        return self._body

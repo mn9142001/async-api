@@ -8,12 +8,18 @@ tracemalloc.start()
 
 class Response(SendResponseMixin):
     
-    def __init__(self, data : dict, request: Request, status = HTTP_200_OK, content_type = "application/json") -> None:
+    def __init__(self, data : dict, request: Request = None, status = HTTP_200_OK, content_type = "application/json", send=None) -> None:        
+        self.sender = send
         self.request = request
         self.status = status
         self.content_type = content_type
         self.data = data
         self.headers = []
+        
+    async def _send(self, *args, **kwargs):
+        if self.sender is not None:
+            return await self.sender(*args, **kwargs)
+        return await super()._send(*args, **kwargs)
         
     async def set_header(self, name:str, value:str):
         self.headers.append((name.encode(), value.encode))

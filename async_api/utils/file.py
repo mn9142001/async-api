@@ -10,27 +10,27 @@ class File:
         self.headers = headers
         self.content = content
         
-    async def make_file(self):
-        self._path = os.path.join(await self.media_folder_path, await self.file_name)
+    def make_file(self):
+        self._path = os.path.join(self.media_folder_path, self.file_name)
         f = open(self._path, 'wb')
         f.write(self.content)
     
     @property
-    async def media_folder_path(self):
+    def media_folder_path(self):
         path = os.path.join(BASE_DIR, 'media')
         if not os.path.exists(path):
             os.makedirs(path)
         return path
             
     @property
-    async def path(self):
+    def path(self):
         if hasattr(self, '_path'):
             return self._path
-        await self.make_file()
+        self.make_file()
         return self._path
     
     @property
-    async def file_name(self):
+    def file_name(self):
         if hasattr(self, '_file_name'):
             return self._file_name
 
@@ -40,7 +40,7 @@ class File:
         return self._file_name
     
     @property
-    async def name(self):
+    def name(self):
         if hasattr(self, '_name'):
             return self._name
         

@@ -36,13 +36,13 @@ async def admin_page(request : Request):
 @router.post('', validator = UserSchema)
 async def index_page(request : Request):
     """You can either return a full response object or the data directly"""
-    return {"message" : "Hello from post index page!", "query" : request.params.query, "body" : await request.body}
+    return {"message" : "Hello from post index page!", "query" : request.params.query, "body" : request.body}
 ```
 
 You can also access files like that
 
 ```
-files = await request.files
+files = request.files
 print(files)
 ```
 

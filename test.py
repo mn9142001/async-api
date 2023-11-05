@@ -1,6 +1,7 @@
 from async_api.app import App
 from async_api.views import View
 from async_api.router import Router
+from async_api.request import Request
 
 from pydantic import BaseModel
 
@@ -18,8 +19,8 @@ class UserSchema(BaseModel):
 
 app = App()
 
-@app.get('', response_model=UserSchema)
-def index_page(request):
+@app.post('', response_model=UserSchema)
+def index_page(request : Request):
     return User()
 
 
