@@ -83,9 +83,17 @@ class RequestBodyDecoder:
             raise ValidationError(error)
 
     async def get_raw_body(self):
-        request_body = await self.rec()
-        data = request_body.get('body', b'')
-        return data
+        body = b""
+        while True:
+            request_body = await self.rec()
+            if not 'body' in request_body:
+                break
+            body += request_body.get('body')
+
+            if not request_body.get('more_body'):
+                break
+            
+        return body
 
     async def parse_body(self):
         data = await self.get_raw_body()

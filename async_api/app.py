@@ -5,7 +5,7 @@ from async_api.router import Router, Path
 from async_api.router.mixins import ViewIncludeMixin
 from async_api.middleware import BaseMiddleWare
 from async_api.response import Response
-
+from asgiref.sync import ThreadSensitiveContext
 
 class App(ViewIncludeMixin):
     request_class = Request
@@ -45,15 +45,18 @@ class App(ViewIncludeMixin):
             request = self.request_class(scope, send, receive)
             await request.set_body()
             return request
-    
+
     async def __call__(self, scope: dict, receive, send) -> Any:
+        await self.handle(scope, receive, send)
+    
+    async def handle(self, scope: dict, receive, send) -> Any:
         self.send = send
         self.receive = receive
         scope['app'] = self
 
         try:                
             self.request = await self.middleware_request_process(
-                await self.construct_request(scope, send=send, receive=receive)
+                await self.construct_request(scope, send=self.send, receive=self.receive)
             )
             
             response = await self.middleware_response_process(

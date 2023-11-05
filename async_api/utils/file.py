@@ -1,5 +1,7 @@
 import os
 from pathlib import Path
+from random import choices
+from string import ascii_letters
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -9,12 +11,25 @@ class File:
     def __init__(self, headers : dict, content : bytes) -> None:
         self.headers = headers
         self.content = content
-        
+
+    def generate_path(self):
+        path = os.path.join(self.media_folder_path, self.file_name)
+        if os.path.exists(path):
+            random_name = "".join(choices(ascii_letters, k=7))
+            path = os.path.join(
+                self.media_folder_path, 
+                f"{random_name}-{self.file_name}"
+            )
+            return path
+        return path
+
+
     def make_file(self):
-        self._path = os.path.join(self.media_folder_path, self.file_name)
-        f = open(self._path, 'wb')
+        self._path = self.generate_path()
+        f = open(self._path, 'wb+')
         f.write(self.content)
-    
+        f.close()
+            
     @property
     def media_folder_path(self):
         path = os.path.join(BASE_DIR, 'media')

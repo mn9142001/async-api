@@ -21,6 +21,7 @@ app = App()
 
 @app.post('', response_model=UserSchema)
 def index_page(request : Request):
+    print(request.body, request.files['hello'].path)
     return User()
 
 
