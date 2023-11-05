@@ -19,7 +19,9 @@ class Path:
     def __repr__(self) -> str:
         return f"<{self.path} - Path object>"
     
-    def __init__(self, path : str, methods : str, callable, validator : BaseModel = None, validate_many : bool = False) -> None:
+    def __init__(self, path : str, methods : str, callable, validator : BaseModel = None, validate_many : bool = False, response_model : BaseModel =None, response_is_list=False) -> None:
+        self.response_model : BaseModel = response_model
+        self.response_is_list = response_is_list
         self.validator = validator
         self.validate_many = validate_many        
         if path.startswith("/"):
@@ -90,8 +92,20 @@ class Path:
 
     async def call_view(self):
         if self.is_coroutine:
-            return await self.view(self.request)
-        return self.view(self.request)
+            response = await self.view(self.request)
+        else:
+            response = self.view(self.request)
+
+        if self.response_model:
+            if self.response_is_list:
+                response = [self.response_model.model_validate(r) for r in response]
+                response = [r.model_dump() for r in response]
+                
+            else:
+                response = self.response_model.model_validate(response)
+                response = response.model_dump()
+                
+        return response
 
     async def __call__(self, request : Request) -> Any:
         self.request = request
