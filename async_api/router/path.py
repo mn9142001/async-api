@@ -14,6 +14,9 @@ class Path:
     
     kwargs = {}
     
+    def __repr__(self) -> str:
+        return f"<{self.path} - Path object>"
+    
     def __init__(self, path : str, methods : str, callable, validator : BaseModel = None, validate_many : bool = False) -> None:
         self.validator = validator
         self.validate_many = validate_many        
@@ -23,6 +26,9 @@ class Path:
         self.view = callable
         self.methods = methods
         self.path_regex = compile_path(self.path)
+        
+    def add_path_prefix(self, prefix : str):
+        self.path = prefix + self.path
         
     async def match_method(self, method) -> bool:
         return (self.methods == ALL_METHODS) or (method in self.methods)

@@ -1,5 +1,6 @@
 from async_api.app import App
 from async_api.views import View
+from async_api.router import Router
 
 app = App()
 
@@ -14,4 +15,9 @@ class TestView(View):
         return "hello from test page"
     
     
-app.register_as_view("test", TestView.as_view())
+
+router = Router(prefix="blog/")
+router.register_as_view("test", TestView.as_view())
+
+app.include_router(router)
+
