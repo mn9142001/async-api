@@ -6,6 +6,8 @@ from pydantic import BaseModel, ValidationError
 from async_api import exception
 from async_api.structs import MultiValueDict
 import logging
+from inspect import iscoroutinefunction
+
 
 ALL_METHODS = '__all__'
 
@@ -81,15 +83,23 @@ class Path:
         else:
             await self.is_mapping(await self.request.body)
             await self._validate(self.validator, await self.request.body)
-    
-    
+            
+    @property
+    def is_coroutine(self) -> bool:
+        return iscoroutinefunction(self.view)
+
+    async def call_view(self):
+        if self.is_coroutine:
+            return await self.view(self.request)
+        return self.view(self.request)
+
     async def __call__(self, request : Request) -> Any:
         self.request = request
         
         if self.is_validate:
             await self.validate()
             
-        response : Union[dict, Response] = await self.view(request)
+        response : Union[dict, Response] = await self.call_view()
         
         if not isinstance(response, Response):                
             response = Response(response, request=request)

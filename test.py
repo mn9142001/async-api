@@ -9,12 +9,16 @@ async def index_page(request):
     return "Hello world"
 
 
-class TestView(View):
+@app.get('token')
+def get_token(request):
+    return "oi"
     
+class TestView(View):
+
     async def get(self):
         return "hello from test page"
-    
-    
+
+
 
 router = Router(prefix="blog/")
 router.register_as_view("test", TestView.as_view())
