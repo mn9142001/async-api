@@ -112,6 +112,10 @@ class RequestBodyDecoder:
         return self._body
     
     async def set_body(self):
+        if not self.method in ['POST', 'PATCH', 'UPDATE']:
+            self._body = {}
+            return self._body
+        
         if not hasattr(self, '_body'):
             await self.parse_body()
         return self._body
