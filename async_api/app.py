@@ -1,18 +1,19 @@
 from async_api.exception import ApiException
-from typing import Any, Union
+from typing import Any
 from async_api.request import Request
 from async_api.router import Router, Path
 from async_api.router.mixins import ViewIncludeMixin
 from async_api.middleware import BaseMiddleWare
 from async_api.response import Response
-from asgiref.sync import ThreadSensitiveContext
+from async_api.config import Config
+
 
 class App(ViewIncludeMixin):
     request_class = Request
 
-    def __init__(self, middlewares : list[BaseMiddleWare] = [], urls = []) -> None:
+    def __init__(self, middlewares : list[BaseMiddleWare] = [], urls = [], config=Config()) -> None:
         self.load_middlewares(middlewares)
-
+        self.config = config
         self.router = Router()
         self.include_urls(urls)
         
