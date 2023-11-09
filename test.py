@@ -25,6 +25,11 @@ def index_page(request : Request):
     return User()
 
 
+@app.register('multiple-methods', methods=["GET", "POST"], response_model=UserSchema)
+def index_page(request : Request):
+    return User()
+
+
 @app.get('', response_model=UserSchema, response_is_list=True)
 def index_page(request):
     return [User() for _ in range(10)]
