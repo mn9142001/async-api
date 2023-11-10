@@ -15,8 +15,8 @@ class UserProfileSchema(BaseSchema):
 
 class UserSchema(BaseSchema):
     name : str
-    age : int
-    profile : list[UserProfileSchema]
+    age : [int, str]
+    profile : [list[UserProfileSchema], None]
     
     def validate_foo(self, data):
         return data
