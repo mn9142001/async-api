@@ -9,7 +9,6 @@ setup(
     url="https://github.com/mn9142001/async-api",
     packages=find_packages(),
     install_requires=[
-        "requests-toolbelt==1.0.0",
-        "pydantic==2.4.2"
+        "requests-toolbelt==1.0.0"
     ],
 )
