@@ -17,6 +17,18 @@ class UserSchema(BaseSchema):
     name : str
     age : int
     profile : list[UserProfileSchema]
+    
+    def validate_foo(self, data):
+        return data
+    
+    def validate(self, data):
+        return super().validate(data)
+    
+    def pre_validate_foo(self, data):
+        return data
+
+    def serialize_foo(self, data):
+        pass
 
 
 class Config(AsyncConfig):

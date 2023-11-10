@@ -40,10 +40,13 @@ class SerializerMixin:
 
     def to_representation(self):
         serialized_data = {}
-        
+
         for field_name, field in self.get_fields():
-            
-            if self.is_iterable(field):
+
+            if hasattr(self, f"serialize_{field_name}"):
+                serialized_data[field_name] = getattr(self, f"serialize_{field_name}")(self.instance)
+
+            elif self.is_iterable(field):
                 serialized_data[field_name] = self.serialize_field_list(field_name=field_name, field_list=field)
 
             elif self.is_nested_field(field):
