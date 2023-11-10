@@ -2,27 +2,32 @@ from async_api.app import App
 from async_api.views import View
 from async_api.router import Router
 from async_api.request import Request
-
-from pydantic import BaseModel
+from async_api.config import Config as AsyncConfig
+from async_api.serializers import BaseSchema
 
 class User:
     name = "mohamed naser"
     age = 15
 
-class UserSchema(BaseModel):
+
+class UserProfileSchema(BaseSchema):
+    first_name : str
+
+class UserSchema(BaseSchema):
     name : str
     age : int
-    
-    class Config:
-        from_attributes = True
+    profile : list[UserProfileSchema]
 
 
-app = App()
+class Config(AsyncConfig):
+    SECRET_KEY = "asokfafok"
 
-@app.post('', response_model=UserSchema)
+
+app = App(config=Config())
+
+@app.post('', validator=UserSchema)
 def index_page(request : Request):
-    print(request.body, request.files['hello'].path)
-    return User()
+    return request.validated_body
 
 
 @app.register('multiple-methods', methods=["GET", "POST"], response_model=UserSchema)
@@ -37,8 +42,8 @@ def index_page(request):
 
 @app.get('token')
 def get_token(request):
-    return "oi"
-    
+    return [request, {"id" : 100}]
+
 class TestView(View):
 
     async def get(self):

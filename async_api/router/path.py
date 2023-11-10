@@ -2,7 +2,7 @@ from async_api.request import Request
 from typing import Any, Union
 from async_api.response import Response
 from async_api.router.reg import compile_path
-from pydantic import BaseModel, ValidationError
+from async_api.serializers import BaseSchema
 from async_api import exception
 from async_api.structs import MultiValueDict
 import logging
@@ -19,8 +19,8 @@ class Path:
     def __repr__(self) -> str:
         return f"<{self.path} - Path object>"
     
-    def __init__(self, path : str, methods : str, callable, validator : BaseModel = None, validate_many : bool = False, response_model : BaseModel =None, response_is_list=False) -> None:
-        self.response_model : BaseModel = response_model
+    def __init__(self, path : str, methods : str, callable, validator : BaseSchema = None, validate_many : bool = False, response_model : BaseSchema =None, response_is_list=False) -> None:
+        self.response_model : BaseSchema = response_model
         self.response_is_list = response_is_list
         self.validator = validator
         self.validate_many = validate_many        
@@ -57,14 +57,6 @@ class Path:
     @property
     def is_validate_many(self):
         return self.validate_many
-
-    @staticmethod
-    async def _validate(validator : BaseModel, obj : Union[dict, MultiValueDict]):
-        try:
-            to_validate = obj if type(obj) is dict else obj.dict()
-            validator.model_validate(to_validate)
-        except (ValidationError, exception.ValidationError) as e:
-            raise exception.ValidationError(e.errors())
         
     @staticmethod
     async def is_iterator(iterable_obj):
@@ -74,18 +66,15 @@ class Path:
             raise exception.ValidationError("Request body is not iterable")
                 
     async def validate(self):
-        
+
         if self.is_validate_many:
-            
-            await self.is_iterator(await self.request.body)
-            
-            for obj in await self.request.body:
-                await self._validate(self.validator, obj)
-                
+            self.request.validated_body = self.validator.validate_list(self.request.body)
+
         else:
-            await self.is_mapping(await self.request.body)
-            await self._validate(self.validator, await self.request.body)
-            
+            await self.is_mapping(self.request.body)
+            to_validate = self.request.body if type(self.request.body) is dict else self.request.body.dict()
+            self.request.validated_body = self.validator.validate_dict(to_validate)
+
     @property
     def is_coroutine(self) -> bool:
         return iscoroutinefunction(self.view)
@@ -97,13 +86,7 @@ class Path:
             response = self.view(self.request)
 
         if self.response_model:
-            if self.response_is_list:
-                response = [self.response_model.model_validate(r) for r in response]
-                response = [r.model_dump() for r in response]
-                
-            else:
-                response = self.response_model.model_validate(response)
-                response = response.model_dump()
+            response = self.response_model.serialize_model(response, many=self.response_is_list)
                 
         return response
 

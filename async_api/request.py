@@ -6,6 +6,7 @@ from async_api.mixins import SendResponseMixin, RequestBodyDecoder
 class Request(RequestBodyDecoder, SendResponseMixin):
     kwargs : dict
     method : str
+    validated_body : dict
     
     def __init__(self, scope : dict, send = None, rec = None) -> None:
         self.kwargs = {}

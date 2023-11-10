@@ -80,7 +80,7 @@ class App(ViewIncludeMixin):
             message = str(exception)
         
         if type(message) == dict:
-            return dict
+            return message
         return {"detail" : message}
 
 
