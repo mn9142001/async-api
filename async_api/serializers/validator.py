@@ -153,7 +153,14 @@ class ValidatorMixin:
     
     @classmethod
     def validate_list(cls, data : list[dict]):
-        pass
+        serializers = [cls(data=d) for d in data]
+        validated_data = []
+        
+        for serializer in serializers:
+            serializer.is_valid(raise_exceptions=True)
+            validated_data.append(serializer.validated_data)
+            
+        return validated_data
     
     @classmethod
     def validate_dict(cls, data : dict):
