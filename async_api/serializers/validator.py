@@ -38,7 +38,7 @@ class ValidatorMixin:
         for field in field_list:
     
             if self.is_nested_field(field):
-                _field : ValidatorMixin = field(data=data, root=self)
+                _field : ValidatorMixin = field(data=data, root=self, context=self.context)
                 _field.is_valid(raise_exceptions=True)
                 return _field._validated_data
             
@@ -56,8 +56,6 @@ class ValidatorMixin:
                 continue
         raise exceptions.ValidationError(error)
 
-        
-        
     def validate_selective_field(self, field_name : str, field_list : list, data):
         if data is None and hasattr(self, field_name):
             return getattr(self, field_name)
@@ -69,18 +67,18 @@ class ValidatorMixin:
 
     def get_data_for_field(self, field_name):
         return self.initial_data.get(field_name)
-    
+
     def validate_generic_alias_field(self, field : GenericAlias, data):
         origin_class = field.__origin__
         field_list = field.__args__
         validated_data = []
         assert origin_class == list, "list is the only generic alias supported for now."
-        
+
         if data is None:
             if None in field_list:
                 raise exceptions.SkipField
             raise exceptions.ValidationError("missing")
-                
+
         for d in data:
             validated_d = self.validate_multiple_types(field_list=field_list, data=d)
             validated_data.append(validated_d)

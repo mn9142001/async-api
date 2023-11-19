@@ -176,6 +176,16 @@ class MultiValueDict(dict):
     def dict(self):
         """Return current object as a dict with singular values."""
         return {key: self[key] for key in self}
+    
+    def to_data(self):
+        data = {}
+        for key in self:
+            if len(self.getlist(key)) > 1:
+                data[key] = self.getlist(key)
+            else:
+                data[key] = self[key]
+
+        return data
 
 
 class QueryParameter:

@@ -3,7 +3,8 @@ from async_api.views import View
 from async_api.router import Router
 from async_api.request import Request
 from async_api.config import Config as AsyncConfig
-from async_api.serializers import BaseSchema
+from async_api.serializers import BaseSchema, FileField
+
 
 class User:
     name = "mohamed naser"
@@ -16,7 +17,8 @@ class UserProfileSchema(BaseSchema):
 class UserSchema(BaseSchema):
     name : str
     age : [int, str]
-    profile : [list[UserProfileSchema], None]
+    image : list[FileField]
+    # profile : [list[UserProfileSchema], None]
     
     def validate_foo(self, data):
         return data

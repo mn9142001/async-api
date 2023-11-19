@@ -16,6 +16,8 @@ class Request(RequestBodyDecoder, SendResponseMixin):
         
         self.sender, self.rec = send, rec
         
+        super().__init__()
+        
     def set_scope(self):
         for key, value in self.scope.items():
             setattr(

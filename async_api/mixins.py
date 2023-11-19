@@ -30,27 +30,28 @@ class SendResponseMixin:
     
 
 class RequestBodyDecoder:
-    _files = MultiValueDict()
-    
+
+    def __init__(self) -> None:
+        self._files = MultiValueDict()
     
     @property
     def files(self) -> Union[dict[str, File], MultiValueDict[str, File]]:
-        assert self.headers.is_multipart, "request must be of mulitpart type"
         return self._files
 
     def make_file(self, headers, content):
         file = File(headers, content)        
-        self._files[file.name] = file
+        self._files.appendlist(file.name, file)
     
     def formdata_dict_constructor(self, part : decoder.BodyPart):
         headers = part.headers
-        if b'Content-Type' in headers:
+
+        if b'Content-Type' in headers and ("filename" in str(headers[b'Content-Disposition'])):
             self.make_file(headers, part.content)
             raise IsFileException
 
         content_disposition = headers.get(b'Content-Disposition', b'').decode('utf-8')
         name = content_disposition.split('name="')[1].split('"')[0]
-        
+
         try:        
             content = part.text
         except UnicodeDecodeError as e:
@@ -64,7 +65,7 @@ class RequestBodyDecoder:
             )
         except (decoder.ImproperBodyPartContentException, decoder.NonMultipartContentTypeException) as e:
             raise ValidationError(str(e))
-        
+
         body = MultiValueDict()
 
         for part in parser.parts:
@@ -110,6 +111,16 @@ class RequestBodyDecoder:
     def body(self) -> Union[MultiValueDict, dict]:
         if self.method in ['GET', 'DELETE', 'OPTIONS']:  return
         return self._body
+    
+    @property
+    def data(self) -> dict:
+        if hasattr(self, '_data'):
+            return self._data
+        
+        self._data = {}
+        self._data.update(self.body.to_data() if hasattr(self.body, 'to_data') else self.body)
+        self._data.update(self.files.to_data())
+        return self._data
     
     async def set_body(self):
         if not self.method in ['POST', 'PATCH', 'UPDATE']:

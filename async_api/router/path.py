@@ -71,9 +71,8 @@ class Path:
             self.request.validated_body = self.validator.validate_list(self.request.body)
 
         else:
-            await self.is_mapping(self.request.body)
-            to_validate = self.request.body if type(self.request.body) is dict else self.request.body.dict()
-            self.request.validated_body = self.validator.validate_dict(to_validate)
+            await self.is_mapping(self.request.data)
+            self.request.validated_body = self.validator.validate_dict(self.request.data)
 
     @property
     def is_coroutine(self) -> bool:
