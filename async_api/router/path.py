@@ -4,7 +4,6 @@ from async_api.response import Response
 from async_api.router.reg import compile_path
 from async_api.serializers import BaseSchema
 from async_api import exception
-from async_api.structs import MultiValueDict
 import logging
 from inspect import iscoroutinefunction
 
