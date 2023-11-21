@@ -26,7 +26,7 @@ class ValidatorMixin:
         try:
             _validated_data = field(data)
             return _validated_data
-        except ValueError as e:
+        except Exception as e:
             raise exceptions.ValidationError(message=str(e))
 
     def validate_multiple_types(self, field_list : list, data):

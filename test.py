@@ -19,9 +19,10 @@ class UserProfileSchema(BaseSchema):
 class UserSchema(BaseSchema):
     name : str
     age : int
-    multiple_types_allowed_field : [int, str]
-    some_int_list : list[list[int]]
-    profiles : list[UserProfileSchema]
+    multiple_types_allowed_field : [int, str] 
+    some_int_list : list[int] #some_int_list[0]
+    nested_int_list : list[list[int]] #nested_int_list[0][0]
+    profiles : list[UserProfileSchema] #profiles[0].first_name, profiles[0].image
     
     def validate_foo(self, data):
         "capture the value after the built-in validation"

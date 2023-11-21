@@ -23,9 +23,11 @@ class Path:
         self.response_is_list = response_is_list
         self.validator = validator
         self.validate_many = validate_many        
+
         if path.startswith("/"):
             logging.warning(f"Included route {path} starts with /, all routes automatically starts with a /")
         self.path : str = f"/{path}"
+
         self.view = callable
         self.methods = methods
         self.path_regex = compile_path(self.path)

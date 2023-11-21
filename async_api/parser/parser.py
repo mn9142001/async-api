@@ -69,7 +69,7 @@ class NestedParser:
             self.__validate_data = self.construct(self.data)
             self._valid = True
         except Exception as err:
-            self.errors = err
+            self.errors = str(err)
         return self._valid
 
     @property
