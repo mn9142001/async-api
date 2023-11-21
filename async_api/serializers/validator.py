@@ -52,7 +52,7 @@ class ValidatorMixin:
                 return _validated_data
 
             except exceptions.ValidationError as e:
-                error = e
+                error = e.message
                 continue
         raise exceptions.ValidationError(error)
 
