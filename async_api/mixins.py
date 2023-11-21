@@ -4,7 +4,7 @@ from requests_toolbelt.multipart import decoder
 from async_api.utils.file import File
 from async_api.structs import MultiValueDict
 from typing import Union
-
+from async_api.parser import NestedParser
 
 class IsFileException(Exception):
     pass
@@ -74,7 +74,17 @@ class RequestBodyDecoder:
             except IsFileException as e:
                 continue
             body[key] = value
+                    
         self._body = body
+        self._body.update(self.files)
+        
+        nested_parser = NestedParser(self._body)
+        
+        if nested_parser.is_valid():
+            self._body = nested_parser.validate_data
+        else:
+            raise ValidationError(nested_parser.errors)
+
 
     def json_decoder(self, data):
         try:

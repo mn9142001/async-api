@@ -13,15 +13,14 @@ class User:
 
 class UserProfileSchema(BaseSchema):
     first_name : str
+    image : FileField
 
 
 class UserSchema(BaseSchema):
     name : str
     age : [int, str]
-    image : list[FileField]
     idk : list[list[int]]
     profiles : list[UserProfileSchema]
-    profile : UserProfileSchema
     
     def validate_foo(self, data):
         return data
