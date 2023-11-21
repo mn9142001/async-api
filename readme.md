@@ -84,6 +84,7 @@ class UserSchema(BaseSchema):
     some_int_list : list[list[int]]
     profiles : list[UserProfileSchema]
     multiple_types_allowed_field : [int, str]
+    nested_int_list : list[list[int]]
 
 you can try such schema with formData easily
 
@@ -93,7 +94,8 @@ you can try such schema with formData easily
     some_int_list[1] : 1,
     some_int_list[2] : 1,
     multiple_types_allowed_field : "hello",
-    
+    nested_int_list[0][0] : 1,
+    nested_int_list[1][0] : 1,
     profiles[0].first_name : "mohamed",
     profiles[0].image : your file goes here,
 
@@ -102,11 +104,27 @@ you can try such schema with formData easily
 result will be something like that:
 
 {
-    name : "your name",
-    age : 100,
-    some_int_list : [1,1,1],
-    multiple_types_allowed_field : "hello",
-    profiles : [{name : "mohamed}, image : FileObject]
+    "name": "your name",
+    "age": 11,
+    "multiple_types_allowed_field": "hello peter",
+    "some_int_list": [
+        1
+    ],
+    "nested_int_list": [
+        [
+            1
+        ],
+        [
+            1
+        ]
+    ],
+
+    "profiles": [
+        {
+            "first_name": "mohamed naser",
+            "image": "media/file/path/kabtTPE-test.PNG"
+        }
+    ]
 }
 
 ```
