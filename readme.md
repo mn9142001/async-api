@@ -71,6 +71,46 @@ class HomeView(View):
 router.register_as_view('cbv', HomeView.as_view())
 ```
 
+we now have the support of nested multipart data thanks to this repo https://github.com/remigermain/nested-multipart-parser/tree/main
+```
+class UserProfileSchema(BaseSchema):
+    first_name : str
+    image : FileField
+
+
+class UserSchema(BaseSchema):
+    name : str
+    age : int
+    some_int_list : list[list[int]]
+    profiles : list[UserProfileSchema]
+    multiple_types_allowed_field : [int, str]
+
+you can try such schema with formData easily
+
+{   name : "your name",
+    age : 100,
+    some_int_list[0] : 1,
+    some_int_list[1] : 1,
+    some_int_list[2] : 1,
+    multiple_types_allowed_field : "hello",
+    
+    profiles[0].first_name : "mohamed",
+    profiles[0].image : your file goes here,
+
+}
+
+result will be something like that:
+
+{
+    name : "your name",
+    age : 100,
+    some_int_list : [1,1,1],
+    multiple_types_allowed_field : "hello",
+    profiles : [{name : "mohamed}, image : FileObject]
+}
+
+```
+
 
 to get started just do the following
 

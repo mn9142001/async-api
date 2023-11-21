@@ -18,8 +18,9 @@ class UserProfileSchema(BaseSchema):
 
 class UserSchema(BaseSchema):
     name : str
-    age : [int, str]
-    idk : list[list[int]]
+    age : int
+    multiple_types_allowed_field : [int, str]
+    some_int_list : list[list[int]]
     profiles : list[UserProfileSchema]
     
     def validate_foo(self, data):
