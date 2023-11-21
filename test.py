@@ -24,15 +24,19 @@ class UserSchema(BaseSchema):
     profiles : list[UserProfileSchema]
     
     def validate_foo(self, data):
+        "capture the value after the built-in validation"
         return data
     
     def validate(self, data):
+        "full data validation"
         return super().validate(data)
     
     def pre_validate_foo(self, data):
+        "capture the initial raw value without any changes"
         return data
 
     def serialize_foo(self, data):
+        "serialize the field yourself"
         pass
 
 
