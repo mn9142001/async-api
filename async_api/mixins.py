@@ -32,6 +32,7 @@ class SendResponseMixin:
 class RequestBodyDecoder:
 
     def __init__(self) -> None:
+        self._data = {}
         self._files = MultiValueDict()
     
     @property
@@ -84,11 +85,14 @@ class RequestBodyDecoder:
             self._body = nested_parser.validate_data
         else:
             raise ValidationError(nested_parser.errors)
-
+        
+        self._data.update(self.body.to_data() if hasattr(self.body, 'to_data') else self.body)
+        self._data.update(self.files.to_data())
 
     def json_decoder(self, data):
         try:
             self._body = json.loads(data)
+            self._data.update(self._body)
         except (json.JSONDecodeError, UnicodeDecodeError) as e:
             error = f"Error parsing JSON: {str(e)}"
             raise ValidationError(error)
@@ -125,11 +129,7 @@ class RequestBodyDecoder:
     @property
     def data(self) -> dict:
         if hasattr(self, '_data'):
-            return self._data
-        
-        self._data = {}
-        self._data.update(self.body.to_data() if hasattr(self.body, 'to_data') else self.body)
-        self._data.update(self.files.to_data())
+            return self._data        
         return self._data
     
     async def set_body(self):
@@ -139,4 +139,5 @@ class RequestBodyDecoder:
         
         if not hasattr(self, '_body'):
             await self.parse_body()
+        
         return self._body

@@ -66,11 +66,11 @@ def index_page(request):
 def get_token(request):
     return [request, {"id" : 100}]
 
+
 class TestView(View):
 
     async def get(self):
         return "hello from test page"
-
 
 
 router = Router(prefix="blog/")
